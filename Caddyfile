@@ -1,0 +1,9 @@
+:80 {
+	redir / /repo
+	root * /fdroid/repo
+	uri strip_prefix /repo
+	file_server
+	handle_errors {
+		abort
+	}
+}

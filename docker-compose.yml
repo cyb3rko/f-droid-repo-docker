@@ -1,0 +1,22 @@
+name: fdroid
+
+services:
+  fdroid:
+    image: fdroid:latest
+    container_name: fdroid
+    restart: "no"
+    volumes:
+      - data:/fdroidserver
+
+  caddy:
+    image: caddy:alpine
+    container_name: fdroid-proxy
+    restart: unless-stopped
+    ports:
+      - 8123:80
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - data:/fdroid
+
+volumes:
+  data:
