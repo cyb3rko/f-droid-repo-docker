@@ -1,4 +1,4 @@
-hash=$(docker images --no-trunc --quiet ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest)
+hash=$(docker images --no-trunc --quiet $REGISTRY/$IMAGE_NAME:latest)
 echo "New image hash:"
 echo $hash
 
