@@ -56,7 +56,7 @@ jobs:
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's Dockerfile.
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path.
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
-      - name: Build and push Docker image
+      - name: Build Docker image
         id: build
         uses: docker/build-push-action@v5
         with:
@@ -65,17 +65,24 @@ jobs:
           load: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
-      
-      # List local images
+
       - name: List images
         run: docker images
 
-      # Check if image was updated
       - name: Check image updates
         id: check
         run: bash ./.github/check_version.sh
 
-      # Push image to registry
       - name: Push image
         if: ${{ steps.check.outputs.update == 'true' }}
         run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Update image hash
+        if: ${{ steps.check.outputs.update == 'true' }}
+        run: docker images --no-trunc --quiet ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest > .image
+
+      - name: Commit updated image hash
+        if: ${{ steps.check.outputs.update == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Release updated image
