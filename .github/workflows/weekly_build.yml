@@ -44,7 +44,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Fetch newest tag
-        run: echo "TAG=$(curl -s "https://gitlab.com/api/v4/projects/36527/repository/tags?per_page=1" | sed -E 's/.*"name":"([0-9.a-z]+)".*/\1/')" >> $GITHUB_OUTPUT
+        run: echo "TAG=$(curl -s "https://gitlab.com/api/v4/projects/36527/repository/tags?per_page=1" | sed -E 's/.*"name":"([0-9.a-z]+)".*/\1/')" >> $GITHUB_ENV
 
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's Dockerfile.
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path.
